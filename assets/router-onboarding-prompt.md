@@ -1,6 +1,6 @@
 # Build on Comfy Router
 
-Comfy Router is one HTTP API at `https://api.comfy.org` for hosted image and video models, such as Seedream, Seedance, Kling, Nano Banana, FLUX, MiniMax, and Wan. You send the model's own JSON input and get the model's own output back. Each run draws Comfy Credits from the user's workspace.
+Comfy Router is one HTTP API at `https://api.comfy.org` for hosted audio, image, video and 3D models, such as Seedream, Seedance, Kling, Nano Banana, elevenlabs, Meshy FLUX, MiniMax, and Wan. You send the model's own JSON input and get the model's own output back. Each run draws Comfy Credits from the user's workspace.
 
 The user may never have made an API key or run a paid API. Go one step at a time, say what each step does before you run it, and never spend credits the user has not agreed to.
 
