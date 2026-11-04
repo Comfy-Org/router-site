@@ -7,7 +7,7 @@ The user may never have made an API key or run a paid API. Go one step at a time
 ## 1. Get a key
 1. Check whether `COMFY_API_KEY` is set in the environment or in the project's `.env`. If it is, go to step 2.
 2. If not, write `save_comfy_key.sh` in the project root (below) and run it with `sh save_comfy_key.sh`, with a timeout of at least 10 minutes (it waits for the user). In the same turn, tell the user:
-   - A Comfy API key window is opening. If you don't have a key yet, click **Create a key**, make one in your browser, then come back to the window and click **I have a key**.
+   - A Comfy API key window is opening. If you don't have a key yet, click **Create a key via web**. Your browser opens the key page, and the window shows the steps and a box to paste the key.
    - Paste the key into the window, not into this chat.
 
    On macOS the script asks in a popup window, so the user never types a command. Elsewhere it asks in the terminal when it can.
@@ -21,12 +21,14 @@ The user may never have made an API key or run a paid API. Go one step at a time
 
    if command -v osascript >/dev/null 2>&1; then
      # macOS: ask in a popup, since the agent's terminal can't take input.
-     while :; do
-       btn=$(osascript -e 'button returned of (display dialog "Comfy Router needs an API key. It starts with comfyui-." & return & return & "No key yet? Click Create a key, make one in your browser, then come back here." buttons {"Cancel", "Create a key", "I have a key"} default button "I have a key" with title "Comfy API key" with icon note)') || { echo "Canceled. No key saved."; exit 1; }
-       [ "$btn" = "I have a key" ] && break
+     btn=$(osascript -e 'button returned of (display dialog "Comfy Router needs an API key. It starts with comfyui-." & return & return & "No key yet? Click Create a key via web." buttons {"Cancel", "Create a key via web", "I have a key"} default button "I have a key" with title "Comfy API key" with icon note)') || { echo "Canceled. No key saved."; exit 1; }
+     if [ "$btn" = "Create a key via web" ]; then
        open "$LINK"
-     done
-     key=$(osascript -e 'text returned of (display dialog "Paste your Comfy API key. It stays hidden and is saved only to .env in your project." default answer "" with hidden answer buttons {"Cancel", "Save"} default button "Save" with title "Comfy API key" with icon note)') || { echo "Canceled. No key saved."; exit 1; }
+       msg='"Your browser opened the Comfy API keys page. Sign in if it asks." & return & return & "1. Enter a name for the key, such as My laptop." & return & "2. Click Generate key." & return & "3. Copy the key. It starts with comfyui-." & return & "4. Paste it below and click Save." & return & return & "The key stays hidden and is saved only to .env in your project."'
+     else
+       msg='"Paste your Comfy API key and click Save." & return & return & "The key stays hidden and is saved only to .env in your project."'
+     fi
+     key=$(osascript -e "text returned of (display dialog $msg default answer \"\" with hidden answer buttons {\"Cancel\", \"Save\"} default button \"Save\" with title \"Comfy API key\" with icon note)") || { echo "Canceled. No key saved."; exit 1; }
    elif [ -t 0 ]; then
      # A terminal that takes input (Linux, Windows Git Bash, or the user running this by hand).
      printf 'Did you create your Comfy API key at %s? [y/n] ' "$LINK"; read -r ans
