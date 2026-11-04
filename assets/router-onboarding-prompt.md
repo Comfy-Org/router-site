@@ -99,7 +99,7 @@ If they say yes, use the queue, because a video takes minutes. Start from the im
        {"type": "text", "text": "The fox turns and runs deeper into the forest"},
        {"type": "image_url", "image_url": {"url": "<the image's data[0].url>"}, "role": "first_frame"}
      ],
-     "duration": 5, "ratio": "16:9", "resolution": "720p"
+     "duration": 5, "ratio": "adaptive", "resolution": "720p"
    }
    ```
 2. Poll `.../requests/<request_id>/status` until it completes, waiting the `Retry-After` the server names each time.
